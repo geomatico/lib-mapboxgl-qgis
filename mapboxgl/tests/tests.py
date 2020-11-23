@@ -1,12 +1,12 @@
 import unittest
 import sys
-from processing.mapboxgl import mapboxgl
+from .. import mapboxgl
 from qgis.utils import iface
 import os
-from qgis.core import QgsMapLayerRegistry
+from qgis.core import QgsProject
 import shutil
 import processing
-from processing import dataobjects
+from processing.tools import dataobjects
 import tempfile
 import webbrowser
 from distutils.dir_util import copy_tree
@@ -24,9 +24,9 @@ def testRoundTripPoints():
     mapboxgl.setLayerSymbologyFromMapboxStyle(layerB2, styles["layers"][2])
     shutil.rmtree(folder, ignore_errors=True)
     '''
-    QgsMapLayerRegistry.instance().removeMapLayer(layerA)
+    QgsProject.removeMapLayer(layerA)
     layerB = processing.getObject("pointsb")
-    QgsMapLayerRegistry.instance().removeMapLayer(layerB)
+    QgsProject.removeMapLayer(layerB)
     stylesB = mapboxgl.projectToMapbox("d:\\mapbox")
     self.assertEqual(styles, stylesB)
     '''

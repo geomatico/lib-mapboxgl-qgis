@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import mapboxgl
-from PyQt4 import QtGui
+from . import mapboxgl
+from qgis.PyQt.QtWidgets import QAction, QFileDialog
+
+import sys
+sys.path.append('/Applications/PyCharm.app/Contents/debug-eggs/pycharm-debug.egg')
+import pydevd
+pydevd.settrace('localhost', port=53100, stdoutToServer=True, stderrToServer=True)
 
 class MapboxGLPlugin:
 
@@ -14,25 +19,25 @@ class MapboxGLPlugin:
         self.iface.removePluginMenu(u"Mapbox GL", self.actionExportWithApp)
 
     def initGui(self):
-        self.actionImport = QtGui.QAction("Import Mapbox GL...", self.iface.mainWindow())
+        self.actionImport = QAction("Import Mapbox GL...", self.iface.mainWindow())
         self.actionImport.triggered.connect(self.importMapbox)
         self.iface.addPluginToMenu(u"Mapbox GL", self.actionImport)
-        self.actionExport = QtGui.QAction("Export Mapbox GL...", self.iface.mainWindow())
+        self.actionExport = QAction("Export Mapbox GL...", self.iface.mainWindow())
         self.actionExport.triggered.connect(lambda: self.exportMapbox(False))
         self.iface.addPluginToMenu(u"Mapbox GL", self.actionExport)
-        self.actionExportWithApp = QtGui.QAction("Export Mapbox GL (include test OL app)...", self.iface.mainWindow())
+        self.actionExportWithApp = QAction("Export Mapbox GL (include test OL app)...", self.iface.mainWindow())
         self.actionExportWithApp.triggered.connect(lambda: self.exportMapbox(True))
         self.iface.addPluginToMenu(u"Mapbox GL", self.actionExportWithApp)        
 
 
     def importMapbox(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self.iface.mainWindow(), 'Open Mapbox File')
+        filename = QFileDialog.getOpenFileName(self.iface.mainWindow(), 'Open Mapbox File')
         if filename:
             mapboxgl.openProjectFromMapboxFile(filename)
         
     def exportMapbox(self, includeApp):
-        folder =  QtGui.QFileDialog.getExistingDirectory(self.iface.mainWindow(), "Select folder to store project", 
-                                                        "", QtGui.QFileDialog.ShowDirsOnly)
+        folder =  QFileDialog.getExistingDirectory(self.iface.mainWindow(), "Select folder to store project",
+                                                        "", QFileDialog.ShowDirsOnly)
         if folder:
             mapboxgl.projectToMapbox(folder, includeApp)
     
